@@ -5,12 +5,14 @@ import (
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/fabioberger/data-structures/utils"
 )
 
 func TestInOrderTraversal(t *testing.T) {
 	tree := initTree()
 	buff := bytes.NewBuffer([]byte{})
-	SetLoggerOut(buff)
+	Logger = utils.SetLoggerOut(Logger, buff)
 	tree.Traverse("inOrder")
 	traversal := strings.Split(buff.String(), "\n")
 	expected := []string{"1", "2", "3", "4", "5", "6", "7", "8", "17"}
@@ -19,13 +21,13 @@ func TestInOrderTraversal(t *testing.T) {
 			t.Error("Traversal order incorrect")
 		}
 	}
-	SetLoggerOut(os.Stdout)
+	utils.SetLoggerOut(Logger, os.Stdout)
 }
 
 func TestPostOrderTraversal(t *testing.T) {
 	tree := initTree()
 	buff := bytes.NewBuffer([]byte{})
-	SetLoggerOut(buff)
+	Logger = utils.SetLoggerOut(Logger, buff)
 	tree.Traverse("postOrder")
 	traversal := strings.Split(buff.String(), "\n")
 	expected := []string{"1", "3", "2", "5", "7", "6", "4", "17", "8"}
@@ -34,13 +36,13 @@ func TestPostOrderTraversal(t *testing.T) {
 			t.Error("Traversal order incorrect")
 		}
 	}
-	SetLoggerOut(os.Stdout)
+	utils.SetLoggerOut(Logger, os.Stdout)
 }
 
 func TestPreOrderTraversal(t *testing.T) {
 	tree := initTree()
 	buff := bytes.NewBuffer([]byte{})
-	SetLoggerOut(buff)
+	Logger = utils.SetLoggerOut(Logger, buff)
 	tree.Traverse("preOrder")
 	traversal := strings.Split(buff.String(), "\n")
 	expected := []string{"8", "4", "2", "1", "3", "6", "5", "7", "17"}
@@ -49,7 +51,7 @@ func TestPreOrderTraversal(t *testing.T) {
 			t.Error("Traversal order incorrect")
 		}
 	}
-	SetLoggerOut(os.Stdout)
+	utils.SetLoggerOut(Logger, os.Stdout)
 }
 
 func TestInsert(t *testing.T) {

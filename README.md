@@ -1,3 +1,5 @@
+[![GoDoc](http://godoc.org/github.com/fabioberger/data-structures?status.svg)](https://godoc.org/github.com/fabioberger/data-structures)
+
 Data Structures Implemented in Go
 ---------------------------------
 

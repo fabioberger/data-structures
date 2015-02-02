@@ -3,17 +3,12 @@ package bst
 
 import (
 	"errors"
-	"io"
 	"log"
 	"math"
 	"os"
 )
 
 var Logger *log.Logger = log.New(os.Stdout, "", 0)
-
-func SetLoggerOut(out io.Writer) {
-	Logger = log.New(out, "", 0)
-}
 
 // Tree struct defines a tree node that store an int Item
 // It is a recursive data structure with tree nodes as children and parent

@@ -2,8 +2,11 @@ package node
 
 import (
 	"errors"
-	"fmt"
+	"log"
+	"os"
 )
+
+var Logger *log.Logger = log.New(os.Stdout, "", 0)
 
 // Node is a struct that models a singly-linkedlist
 type Node struct {
@@ -22,7 +25,8 @@ func NewNode(data int) *Node {
 // Print traverses the linkedlist and prints out each node
 func (n *Node) Print() {
 	for n != nil {
-		fmt.Println(n)
+		// fmt.Println(n)
+		Logger.Printf("%v", n.Data)
 		n = n.Next
 	}
 }
@@ -95,7 +99,7 @@ func (n *Node) FindNLast(toLast int) (*Node, error) {
 	follower := n
 	leader := n
 	for i := 0; i < toLast-1; i++ {
-		if leader == nil {
+		if leader == nil || leader.Next == nil {
 			return nil, errors.New("Error: list size < toLast")
 		}
 		leader = leader.Next
