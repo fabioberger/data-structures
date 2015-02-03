@@ -138,3 +138,38 @@ if empty {
 	fmt.Println("Stack is empty")
 }
 ```
+
+## Queues
+
+**Import the package:**
+
+```go
+import "github.com/fabioberger/data-structures/queue"
+```
+
+**Create a new queue and add items to it:**
+
+```go
+q := NewQueue(1)
+q.Enqueue(12)
+q.Enqueue(3)
+q.Enqueue(8)
+q.Enqueue(4)
+```
+
+**Dequeue an item off the end of the queue:**
+
+```go
+data, err := q.Dequeue()
+if err != nil {
+	fmt.Println(err) // No more items to dequeue
+}
+fmt.Println(data) // 1
+```
+
+**Check if the queue is empty:**
+
+```go
+empty := q.IsEmpty()
+fmt.Println(empty) // false
+```
