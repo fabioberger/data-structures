@@ -25,13 +25,13 @@ And off you go!
 
 ## Binary Search Trees
 
-First import the BST package:
+**First import the BST package:**
 
 ```go
 import "github.com/fabioberger/data-structures/bst"
 ```
 
-Create a tree and insert some values:
+**Create a tree and insert some values:**
 
 ```
 tree := bst.NewTree(8, nil) // 2nd param is for a parent tree
@@ -40,7 +40,7 @@ tree.Insert(17)
 tree.Insert(2)
 ```
 
-Search for a value:
+**Search for a value:**
 
 ```
 value, err := tree.Search(2) // binary search in O(lg n) time
