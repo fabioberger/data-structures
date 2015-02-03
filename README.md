@@ -50,7 +50,7 @@ if err != nil {
 fmt.Println("Found: ", value)
 ```
 
-Traverse the tree ("inOrder", "preOrder" & "postOrder"):
+**Traverse the tree ("inOrder", "preOrder" & "postOrder"):**
 
 ```
 traversal := []int{}
@@ -58,7 +58,7 @@ tree.Traverse("inOrder", &traversal)
 fmt.Println(traversal) // [2 4 8 17]
 ```
 
-Find the minimum value: 
+**Find the minimum value:** 
 
 ```go
 min, err := tree.Minimum()
@@ -67,7 +67,7 @@ if err != nil {
 }
 fmt.Println(min) // 2
 ```
-Find the maximum value:
+**Find the maximum value:**
 
 ```go
 max, err := tree.Maximum()
@@ -76,7 +76,7 @@ if err != nil {
 }
 fmt.Println(max.Item) //17
 ```
-Delete an item:
+**Delete an item:**
 
 ```go
 deleted, err := tree.Delete(4)
@@ -86,7 +86,7 @@ if err != nil {
 fmt.Println(deleted) // true
 ```
 
-Check if the tree is balanced (i.e: no height distance > 2):
+**Check if the tree is balanced (i.e: no height distance > 2):**
 
 ```go
 isBalanced := tree.IsBalanced() 
@@ -95,5 +95,46 @@ if isBalanced {
 }
 ```
 
+## Stacks
 
+**Import the package:**
 
+```go
+import "github.com/fabioberger/data-structures/stack"
+```
+
+**Create a new stack and add items to it:**
+
+```go
+s := NewStack()
+s.Push(1)
+s.Push(5)
+s.Push(7)
+s.Push(10)
+```
+
+**Peek at the top value in the stack:**
+
+```go
+peeked := s.Peek()
+fmt.Println(peeked) // 10
+```
+
+**Pop an item off the top of the stack:**
+
+```go
+item, err := s.Pop()
+if err != nil {
+	fmt.Println(err) // No more items to pop!
+}
+fmt.Println(item) // 10
+```
+
+**Check if the stack is empty:**
+
+```go
+empty := s.IsEmpty()
+if empty {
+	fmt.Println("Stack is empty")
+}
+```
