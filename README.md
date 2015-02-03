@@ -262,7 +262,7 @@ Vert. 10 ->
 */
 ```
 
-**Breadth First Search:**
+**Breadth first search:**
 
 ```go
 g.InitSearch()
@@ -288,7 +288,7 @@ components := g.ConnectedComponents()
 fmt.Println(components) // map[1:[1 2 6 3 4 5] 2:[7 8 9 10]] (two separate, connected components)
 ```
 
-**Depth First Search:**
+**Depth first search:**
 
 ```go
 g.InitSearch()
