@@ -3,7 +3,7 @@
 Data Structures Implemented in Go
 ---------------------------------
 
-While brushing up on implementing different data structures, I decided to implement a simple version of each in Golang.
+While brushing up on implementing different data structures, I decided to write a simple version of each in Golang.
 
 # Installation
 
@@ -45,7 +45,7 @@ tree.Insert(2)
 ```
 value, err := tree.Search(2) // binary search in O(lg n) time
 if err != nil {
-	fmt.Println(err) // Value not found in tree
+	fmt.Println(err) // i.e Value not found in tree
 }
 fmt.Println("Found: ", value)
 ```
@@ -58,7 +58,7 @@ tree.Traverse("inOrder", &traversal)
 fmt.Println(traversal) // [2 4 8 17]
 ```
 
-**Find the minimum value:** 
+**Find the minimum value:**
 
 ```go
 min, err := tree.Minimum()
@@ -89,7 +89,7 @@ fmt.Println(deleted) // true
 **Check if the tree is balanced (i.e: no height distance > 2):**
 
 ```go
-isBalanced := tree.IsBalanced() 
+isBalanced := tree.IsBalanced()
 if isBalanced {
 	fmt.Println("Tree is balanced")
 }
@@ -106,7 +106,7 @@ import "github.com/fabioberger/data-structures/stack"
 **Create a new stack and add items to it:**
 
 ```go
-s := NewStack()
+s := stack.NewStack()
 s.Push(1)
 s.Push(5)
 s.Push(7)
@@ -125,7 +125,7 @@ fmt.Println(peeked) // 10
 ```go
 item, err := s.Pop()
 if err != nil {
-	fmt.Println(err) // No more items to pop!
+	fmt.Println(err) // ie. No more items to pop!
 }
 fmt.Println(item) // 10
 ```
@@ -150,7 +150,7 @@ import "github.com/fabioberger/data-structures/queue"
 **Create a new queue and add items to it:**
 
 ```go
-q := NewQueue(1)
+q := queue.NewQueue(1)
 q.Enqueue(12)
 q.Enqueue(3)
 q.Enqueue(8)
@@ -185,7 +185,7 @@ import "github.com/fabioberger/data-structures/node"
 **Create a new linked list and add items to it:**
 
 ```go
-ll := NewNode(5)
+ll := node.NewNode(5)
 ll.Append(3)
 ll.Append(6)
 ll.Append(8)
@@ -235,7 +235,7 @@ import "github.com/fabioberger/data-structures/graph"
 **Create a new graph and add edges via a file:**
 
 ```go
-g := NewGraph(true) // true for a directed graph
+g := graph.NewGraph(true) // true for a directed graph
 g.Read("./test_data/graph1.txt")
 ```
 where the file contains two ints per line representing the two vertices of an edge
@@ -246,7 +246,7 @@ where the file contains two ints per line representing the two vertices of an ed
 g.Print()
 /*
 Expected Output:
-Graph num edges: 9 and num vertices: 10 
+Graph num edges: 9 and num vertices: 10
 Directed? true
 Adjacency List:
 Vert. 1 -> 2 6
