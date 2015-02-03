@@ -240,7 +240,7 @@ g.Read("./test_data/graph1.txt")
 ```
 where the file contains two ints per line representing the two vertices of an edge
 
-**Print the graph: **
+**Print the graph:**
 
 ```go
 g.Print()
