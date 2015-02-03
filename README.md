@@ -3,7 +3,7 @@
 Data Structures Implemented in Go
 ---------------------------------
 
-While brushing up on implementing different data structures, I decided to write a simple version of each in Golang.
+While brushing up on implementing different data structures, I decided to write a simple version of each in Golang. The queue and stack are both implemented using the singly linked list.
 
 # Installation
 
@@ -302,7 +302,7 @@ Single values are discovered vertices, double values are discovered edges
 g.InitSearch()
 cycleEdge, err := g.FindCycles(1)
 if err != nil {
-	panic(err) // Did not find the existing cycle
+	panic(err) // i.e Did not find the existing cycle
 }
 fmt.Println(cycleEdge) // [2 5]
 ```
