@@ -1,55 +1,41 @@
 package bst
 
-import (
-	"bytes"
-	"os"
-	"strings"
-	"testing"
-)
+import "testing"
 
 func TestInOrderTraversal(t *testing.T) {
 	tree := initTree()
-	Output = bytes.NewBuffer([]byte{})
-	buff := Output.(*bytes.Buffer)
-	tree.Traverse("inOrder")
-	traversal := strings.Split(buff.String(), "\n")
-	expected := []string{"1", "2", "3", "4", "5", "6", "7", "8", "17"}
-	for i, val := range expected {
-		if val != traversal[i] {
+	got := []int{}
+	tree.Traverse("inOrder", &got)
+	expected := []int{1, 2, 3, 4, 5, 6, 7, 8, 17}
+	for i, val := range got {
+		if val != expected[i] {
 			t.Error("Traversal order incorrect")
 		}
 	}
-	Output = os.Stdout
 }
 
 func TestPostOrderTraversal(t *testing.T) {
 	tree := initTree()
-	Output = bytes.NewBuffer([]byte{})
-	buff := Output.(*bytes.Buffer)
-	tree.Traverse("postOrder")
-	traversal := strings.Split(buff.String(), "\n")
-	expected := []string{"1", "3", "2", "5", "7", "6", "4", "17", "8"}
-	for i, val := range expected {
-		if val != traversal[i] {
+	got := []int{}
+	tree.Traverse("postOrder", &got)
+	expected := []int{1, 3, 2, 5, 7, 6, 4, 17, 8}
+	for i, val := range got {
+		if val != expected[i] {
 			t.Error("Traversal order incorrect")
 		}
 	}
-	Output = os.Stdout
 }
 
 func TestPreOrderTraversal(t *testing.T) {
 	tree := initTree()
-	Output = bytes.NewBuffer([]byte{})
-	buff := Output.(*bytes.Buffer)
-	tree.Traverse("preOrder")
-	traversal := strings.Split(buff.String(), "\n")
-	expected := []string{"8", "4", "2", "1", "3", "6", "5", "7", "17"}
-	for i, val := range expected {
-		if val != traversal[i] {
+	got := []int{}
+	tree.Traverse("preOrder", &got)
+	expected := []int{8, 4, 2, 1, 3, 6, 5, 7, 17}
+	for i, val := range got {
+		if val != expected[i] {
 			t.Error("Traversal order incorrect")
 		}
 	}
-	Output = os.Stdout
 }
 
 func TestInsert(t *testing.T) {
@@ -82,6 +68,17 @@ func TestMinimum(t *testing.T) {
 		t.Error(err.Error())
 	}
 	if min.Item != 1 {
+		t.Error("Did not find correct minimum")
+	}
+}
+
+func TestMaximum(t *testing.T) {
+	tree := initTree()
+	min, err := tree.Maximum()
+	if err != nil {
+		t.Error(err.Error())
+	}
+	if min.Item != 17 {
 		t.Error("Did not find correct minimum")
 	}
 }

@@ -3,7 +3,6 @@ package bst
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"math"
 	"os"
@@ -107,21 +106,21 @@ func (t *Tree) Maximum() (*Tree, error) {
 // Traverse will visit each node in a BST, printing each one as it goes
 // This method requires specifying the kind of traversal to perform:
 // either inOrder, preOrder or postOrder traversal
-func (t *Tree) Traverse(kind string) {
+func (t *Tree) Traverse(kind string, collector *[]int) {
 	if t != nil {
 		switch {
 		case kind == "inOrder":
-			t.Left.Traverse("inOrder")
-			fmt.Fprintln(Output, t.Item)
-			t.Right.Traverse("inOrder")
+			t.Left.Traverse("inOrder", collector)
+			(*collector) = append((*collector), t.Item)
+			t.Right.Traverse("inOrder", collector)
 		case kind == "preOrder":
-			fmt.Fprintln(Output, t.Item)
-			t.Left.Traverse("preOrder")
-			t.Right.Traverse("preOrder")
+			(*collector) = append((*collector), t.Item)
+			t.Left.Traverse("preOrder", collector)
+			t.Right.Traverse("preOrder", collector)
 		case kind == "postOrder":
-			t.Left.Traverse("postOrder")
-			t.Right.Traverse("postOrder")
-			fmt.Fprintln(Output, t.Item)
+			t.Left.Traverse("postOrder", collector)
+			t.Right.Traverse("postOrder", collector)
+			(*collector) = append((*collector), t.Item)
 		}
 	}
 }
