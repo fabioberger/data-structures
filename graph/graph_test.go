@@ -58,7 +58,10 @@ func TestShortestPath(t *testing.T) {
 func TestFindCycle(t *testing.T) {
 	g := initGraph(true)
 	g.InitSearch()
-	cycleEdge := g.FindCycles(1)
+	cycleEdge, err := g.FindCycles(1)
+	if err != nil {
+		t.Error("Did not find the cycle")
+	}
 	if cycleEdge[0] != 2 || cycleEdge[1] != 5 {
 		t.Error("Did not find cycle that exists")
 	}

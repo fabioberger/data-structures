@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/fabioberger/data-structures/bst"
+	"github.com/fabioberger/data-structures/graph"
 )
 
 func main() {
@@ -49,4 +50,8 @@ func main() {
 	if isBalanced {
 		fmt.Println("Tree is balanced")
 	}
+
+	g := graph.NewGraph(true) // true for a directed graph
+	g.Read("./graph/test_data/graph1.txt")
+	g.Print()
 }

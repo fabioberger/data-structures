@@ -337,10 +337,14 @@ func (t *CycleFindTraversal) processEdge(g *Graph, x int, y int) {
 
 // FindCycles figures out if there are any cycles in the graph (nodes which connect in a cyclic fashion)
 // It returns an array of two ints, defining the edge where the cycle begins
-func (g *Graph) FindCycles(start int) [2]int {
+func (g *Graph) FindCycles(start int) ([2]int, error) {
 	t := new(CycleFindTraversal)
 	g.dfs(start, t)
-	return t.CycleEdge
+	if t.CycleEdge[0] == 0 {
+		emptyValue := [2]int{0, 0}
+		return emptyValue, errors.New("No cycle exists")
+	}
+	return t.CycleEdge, nil
 }
 
 // ArticulationVectorTraversal implements the interface GraphProcessor in order to

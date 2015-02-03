@@ -222,4 +222,95 @@ if err != nil {
 fmt.Println(found) // 3
 ```
 
+## Graphs
 
+**Warning: Still a work in progress**
+
+**Import the package:**
+
+```go
+import "github.com/fabioberger/data-structures/graph"
+```
+
+**Create a new graph and add edges via a file:**
+
+```go
+g := NewGraph(true) // true for a directed graph
+g.Read("./test_data/graph1.txt")
+```
+where the file contains two ints per line representing the two vertices of an edge
+
+**Print the graph: **
+
+```go
+g.Print()
+/*
+Expected Output:
+Graph num edges: 9 and num vertices: 10 
+Directed? true
+Adjacency List:
+Vert. 1 -> 2 6
+Vert. 2 -> 3
+Vert. 3 -> 4
+Vert. 4 -> 5
+Vert. 5 -> 2
+Vert. 6 ->
+Vert. 7 -> 8
+Vert. 8 -> 9
+Vert. 9 -> 10
+Vert. 10 ->
+*/
+```
+
+**Breadth First Search:**
+
+```go
+g.InitSearch()
+traversal := g.BreadthFirstSearch(1) // start at vertice 1
+fmt.Println(traversal) // [[1] [1 2] [1 6] [2] [2 3] [6] [3] [3 4] [4] [4 5] [5] [5 2]]
+```
+Single values are discovered vertices, double values are discovered edges
+
+**Find the shortest past:**
+
+```go
+path, err := g.FindPath(start, end)
+if err != nil {
+	fmt.Println(err) // No Path exists
+}
+fmt.Println(path) // [1 2 3 4 5]
+```
+
+**Find all connected components of the graph:**
+
+```go
+components := g.ConnectedComponents()
+fmt.Println(components) // map[1:[1 2 6 3 4 5] 2:[7 8 9 10]] (two separate, connected components)
+```
+
+**Depth First Search:**
+
+```go
+g.InitSearch()
+got := g.DepthFirstSearch(1) // [[1] [1 2] [2] [2 3] [3] [3 4] [4] [4 5] [5] [5 2] [1 6] [6]]
+```
+Single values are discovered vertices, double values are discovered edges
+
+**Find any cycles in the graph:**
+
+```go
+g.InitSearch()
+cycleEdge, err := g.FindCycles(1)
+if err != nil {
+	panic(err) // Did not find the existing cycle
+}
+fmt.Println(cycleEdge) // [2 5]
+```
+
+**Find all articulation vectors:**
+
+```go
+g.InitSearch()
+articulationVectors := g.FindArticulationVectors(1)
+fmt.Println(articulationVectors) // [2 2 1]
+```
