@@ -43,7 +43,7 @@ func (n *Node) Length() int {
 }
 
 // AppendToTail adds a node to the end of a linkedlist
-func (n *Node) AppendToTail(data int) {
+func (n *Node) Append(data int) {
 	end := NewNode(data)
 	for n.Next != nil {
 		n = n.Next

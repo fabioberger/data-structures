@@ -29,9 +29,9 @@ func TestLength(t *testing.T) {
 	}
 }
 
-func TestAppendToTail(t *testing.T) {
+func TestAppend(t *testing.T) {
 	ll := initLinkedList()
-	ll.AppendToTail(25)
+	ll.Append(25)
 	for ll.Next != nil {
 		ll = ll.Next
 	}
@@ -97,11 +97,11 @@ func TestFindNLast(t *testing.T) {
 
 func initLinkedList() *Node {
 	n := NewNode(5)
-	n.AppendToTail(3)
-	n.AppendToTail(6)
-	n.AppendToTail(8)
-	n.AppendToTail(3)
-	n.AppendToTail(8)
+	n.Append(3)
+	n.Append(6)
+	n.Append(8)
+	n.Append(3)
+	n.Append(8)
 	return n
 }
 

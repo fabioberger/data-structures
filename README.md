@@ -173,3 +173,53 @@ fmt.Println(data) // 1
 empty := q.IsEmpty()
 fmt.Println(empty) // false
 ```
+
+## Singly Linked Lists
+
+**Import the package:**
+
+```go
+import "github.com/fabioberger/data-structures/node"
+```
+
+**Create a new linked list and add items to it:**
+
+```go
+ll := NewNode(5)
+ll.Append(3)
+ll.Append(6)
+ll.Append(8)
+ll.Append(3)
+ll.Append(8)
+```
+
+**Calculate length of the linked list:**
+
+```go
+length := ll.Length()
+fmt.Println(length) //6
+```
+
+**Delete a node by value (removes first node found with this value):**
+
+```go
+ll.DeleteNode(6)
+```
+
+**Remove all duplicates from the linked list:**
+
+```go
+ll.RemoveDuplicates()
+```
+
+**Find nth to last node:**
+
+```go
+found, err := ll.FindNLast(2)
+if err != nil {
+	panic(err)
+}
+fmt.Println(found) // 3
+```
+
+
