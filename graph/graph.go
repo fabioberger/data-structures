@@ -1,12 +1,15 @@
 package graph
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
 
 	"github.com/fabioberger/data-structures/queue"
 )
+
+var Output io.Writer = os.Stdout
 
 // Enum of Vertice States (i.e DISCOVERED, UNDISCOVERED, PROCESSED)
 type VerticeState int
@@ -56,7 +59,8 @@ type Graph struct {
 	ExitTime          map[int]int          // Time when vertices were exited
 	ReachableAncestor map[int]int          // Earliest reachable ancestor of a vertice
 	TreeOutDegree     map[int]int
-	Finished          bool // Graph traversal end condition reached
+	Finished          bool  // Graph traversal end condition reached
+	Path              []int // Contains shortest path if one calculated
 }
 
 // NewGraph instantiates a new Graph struct with sensible default values
@@ -92,18 +96,18 @@ func (g *Graph) InsertEdge(x, y int, directed bool) {
 
 // Print outputs a representation of the Graph based on its adjacency list
 func (g *Graph) Print() {
-	fmt.Printf("Graph num edges: %v and num vertices: %v \n", g.nEdges, g.nVertices)
-	fmt.Println("Directed? ", g.Directed)
-	fmt.Println("Adjacency List:")
+	fmt.Fprintf(Output, "Graph num edges: %v and num vertices: %v \n", g.nEdges, g.nVertices)
+	fmt.Fprintf(Output, "Directed? %v\n", g.Directed)
+	fmt.Fprintf(Output, "Adjacency List:\n")
 	var temp *EdgeNode
 	for i := 1; i <= g.nVertices; i++ {
-		fmt.Printf("Vert. %v ->", i)
+		fmt.Fprintf(Output, "Vert. %v ->", i)
 		temp = g.Edges[i]
 		for temp != nil {
-			fmt.Printf(" %v", temp.Y)
+			fmt.Fprintf(Output, " %v", temp.Y)
 			temp = temp.Next
 		}
-		fmt.Println("")
+		fmt.Fprintln(Output, "")
 	}
 }
 
@@ -151,6 +155,7 @@ func (g *Graph) InitSearch() {
 	}
 	g.Time = 0
 	g.Finished = false
+	g.Path = []int{}
 }
 
 // bfs is a Breadth-first search through a graph while allowing the caller to
@@ -205,42 +210,52 @@ func (t *QuietTraversal) processEdge(g *Graph, x int, y int) {
 }
 
 // FindPath finds the shortest path between start and end in an unweighted graph
-// This only works if BFS first performed with start as its start
-func (g *Graph) FindPath(start, end int) {
+func (g *Graph) FindPath(start, end int) ([]int, error) {
 	t := new(QuietTraversal)
 	g.InitSearch()
 	g.bfs(start, t)
-	g.traversePath(start, end)
+	err := g.traversePath(start, end)
+	if err != nil {
+		return nil, err
+	}
+	return g.Path, nil
 }
 
 // Traverse the shortest path between two nodes recursively printing the path
-func (g *Graph) traversePath(start, end int) {
+func (g *Graph) traversePath(start, end int) error {
 	if g.Parent[end] == -1 && start != end { // Must make sure a path is possible
-		fmt.Println("No path exists...")
-		return
+		fmt.Fprintln(Output, "No path exists...")
+		return errors.New("No Path exists")
 	}
 	if start == end || end == -1 {
-		fmt.Printf("%v", start)
+		g.Path = append(g.Path, start)
+		fmt.Fprintf(Output, "%v", start)
 	} else {
-		g.traversePath(start, g.Parent[end])
-		fmt.Printf(" %v", end)
+		if err := g.traversePath(start, g.Parent[end]); err != nil {
+			return err
+		}
+		g.Path = append(g.Path, end)
+		fmt.Fprintf(Output, " %v", end)
 	}
+	return nil
 }
 
 // BreadthFirstSearch performs a vanilla BFS traversal of the graph using the
 // Traversal struct as is GraphProcessor
-func (g *Graph) BreadthFirstSearch(start int) {
+func (g *Graph) BreadthFirstSearch(start int) [][]int {
 	t := new(Traversal)
 	g.bfs(start, t)
+	return t.Visits
 }
 
 // Traversal implements the GraphProcessor interface in such a way to allow
 // simple BFS and DFS traversals
 type Traversal struct {
+	Visits [][]int
 }
 
 func (t *Traversal) processVertexEarly(g *Graph, v int) {
-	fmt.Printf("Processed Vertex %v\n", v) // For Bfs & Dfs
+	t.Visits = append(t.Visits, []int{v})
 }
 
 func (t *Traversal) processVertexLate(g *Graph, v int) {
@@ -248,16 +263,28 @@ func (t *Traversal) processVertexLate(g *Graph, v int) {
 }
 
 func (t *Traversal) processEdge(g *Graph, x int, y int) {
-	fmt.Printf("Processed Edge (%v, %v)\n", x, y) // For Bfs & Dfs
+	edge := []int{x, y}
+	t.Visits = append(t.Visits, edge)
 }
 
 // ConnectedComponentTraversal implements the GraphProcessor interface so as to
 // identify connected components while employing BFS
 type ConnectedComponentTraversal struct {
+	Current    int
+	Components map[int][]int
+}
+
+func NewConnectedComponentTraversal() *ConnectedComponentTraversal {
+	t := new(ConnectedComponentTraversal)
+	t.Components = make(map[int][]int)
+	return t
 }
 
 func (t *ConnectedComponentTraversal) processVertexEarly(g *Graph, v int) {
-	fmt.Printf(" %d", v)
+	if _, ok := t.Components[t.Current]; !ok {
+		t.Components[t.Current] = []int{}
+	}
+	t.Components[t.Current] = append(t.Components[t.Current], v)
 }
 
 func (t *ConnectedComponentTraversal) processVertexLate(g *Graph, v int) {
@@ -269,23 +296,24 @@ func (t *ConnectedComponentTraversal) processEdge(g *Graph, x int, y int) {
 }
 
 // ConnectedComponents discovers all connected components of a graph
-func (g *Graph) ConnectedComponents() {
-	t := new(ConnectedComponentTraversal)
+func (g *Graph) ConnectedComponents() map[int][]int {
+	t := NewConnectedComponentTraversal()
 	g.InitSearch()
 	c := 1 // component number
 	for i := 1; i <= g.nVertices; i++ {
 		if g.State[i] == UNDISCOVERED {
-			fmt.Printf("Component %v:", c)
+			t.Current = c
 			g.bfs(i, t)
-			fmt.Println("")
 			c++
 		}
 	}
+	return t.Components
 }
 
 // CycleFindTraversal implements GraphProcessor in order to find graph cycles
 // with the help of DFS
 type CycleFindTraversal struct {
+	CycleEdge [2]int
 }
 
 func (t *CycleFindTraversal) processVertexEarly(g *Graph, v int) {
@@ -298,23 +326,27 @@ func (t *CycleFindTraversal) processVertexLate(g *Graph, v int) {
 
 func (t *CycleFindTraversal) processEdge(g *Graph, x int, y int) {
 	if g.Parent[y] != x { // Found back edge
-		fmt.Printf("Cycle exists from %v to %v \n", y, x)
-		fmt.Printf("Path is: ")
+		t.CycleEdge = [2]int{y, x}
+		fmt.Fprintf(Output, "Cycle exists from %v to %v \n", y, x)
+		fmt.Fprintf(Output, "Path is: ")
 		g.FindPath(y, x)
-		fmt.Printf("\n\n")
+		fmt.Fprintf(Output, "\n\n")
 		g.Finished = true
 	}
 }
 
 // FindCycles figures out if there are any cycles in the graph (nodes which connect in a cyclic fashion)
-func (g *Graph) FindCycles(start int) {
+// It returns an array of two ints, defining the edge where the cycle begins
+func (g *Graph) FindCycles(start int) [2]int {
 	t := new(CycleFindTraversal)
 	g.dfs(start, t)
+	return t.CycleEdge
 }
 
 // ArticulationVectorTraversal implements the interface GraphProcessor in order to
 // find articulator vectors using DFS
 type ArticulationVectorTraversal struct {
+	ArticulationVectors []int
 }
 
 func (t *ArticulationVectorTraversal) processVertexEarly(g *Graph, v int) {
@@ -336,19 +368,21 @@ func (t *ArticulationVectorTraversal) processEdge(g *Graph, x int, y int) {
 func (t *ArticulationVectorTraversal) processVertexLate(g *Graph, v int) {
 	if g.Parent[v] == -1 { // Test if v is root
 		if g.TreeOutDegree[v] > 1 { // root has more then one child
-			fmt.Println("Root articulation vertex: ", v)
+			fmt.Fprintln(Output, "Root articulation vertex: ", v)
+			t.ArticulationVectors = append(t.ArticulationVectors, v)
 		}
 		return
 	}
 	root := (g.Parent[g.Parent[v]] < 1) // Is the parent of v the root vertex?
 	if g.ReachableAncestor[v] == g.Parent[v] && !root {
-		// fmt.Printf("\n Reachable Ancestor: %v of %v with parent: %v \n", g.ReachableAncestor[v], v, g.Parent[v])
-		fmt.Println("Parent Articulation Vector: ", g.Parent[v])
+		fmt.Fprintln(Output, "Parent Articulation Vector: ", g.Parent[v])
+		t.ArticulationVectors = append(t.ArticulationVectors, g.Parent[v])
 	}
 	if g.ReachableAncestor[v] == v {
 		// fmt.Println("Bridge Articulation Vertex: ", g.Parent[v])
 		if g.TreeOutDegree[v] > 0 { // Check that v is not a leaf
-			fmt.Println("Bridge Articulation Vertex: ", v)
+			fmt.Fprintln(Output, "Bridge Articulation Vertex: ", v)
+			t.ArticulationVectors = append(t.ArticulationVectors, v)
 		}
 	}
 
@@ -360,15 +394,17 @@ func (t *ArticulationVectorTraversal) processVertexLate(g *Graph, v int) {
 }
 
 // FindArticulationVectors finds all the articulator vectors in a Graph
-func (g *Graph) FindArticulationVectors(start int) {
+func (g *Graph) FindArticulationVectors(start int) []int {
 	t := new(ArticulationVectorTraversal)
 	g.dfs(start, t)
+	return t.ArticulationVectors
 }
 
 // DepthFirstSearch performs a DFS from a starting graph vertice
-func (g *Graph) DepthFirstSearch(start int) {
+func (g *Graph) DepthFirstSearch(start int) [][]int {
 	t := new(Traversal)
 	g.dfs(start, t)
+	return t.Visits
 }
 
 // dfs performs a general purpose Depth-first search through a graph

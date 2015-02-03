@@ -3,12 +3,13 @@ package bst
 
 import (
 	"errors"
-	"log"
+	"fmt"
+	"io"
 	"math"
 	"os"
 )
 
-var Logger *log.Logger = log.New(os.Stdout, "", 0)
+var Output io.Writer = os.Stdout
 
 // Tree struct defines a tree node that store an int Item
 // It is a recursive data structure with tree nodes as children and parent
@@ -111,16 +112,16 @@ func (t *Tree) Traverse(kind string) {
 		switch {
 		case kind == "inOrder":
 			t.Left.Traverse("inOrder")
-			Logger.Printf("%v", t.Item)
+			fmt.Fprintln(Output, t.Item)
 			t.Right.Traverse("inOrder")
 		case kind == "preOrder":
-			Logger.Printf("%v", t.Item)
+			fmt.Fprintln(Output, t.Item)
 			t.Left.Traverse("preOrder")
 			t.Right.Traverse("preOrder")
 		case kind == "postOrder":
 			t.Left.Traverse("postOrder")
 			t.Right.Traverse("postOrder")
-			Logger.Printf("%v", t.Item)
+			fmt.Fprintln(Output, t.Item)
 		}
 	}
 }

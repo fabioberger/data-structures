@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"strings"
 	"testing"
-
-	"github.com/fabioberger/data-structures/utils"
 )
 
 func TestPrint(t *testing.T) {
@@ -108,8 +106,8 @@ func initLinkedList() *Node {
 }
 
 func convertToIntSlice(ll *Node) ([]int, error) {
-	buff := bytes.NewBuffer([]byte{})
-	Logger = utils.SetLoggerOut(Logger, buff)
+	Output = bytes.NewBuffer([]byte{})
+	buff := Output.(*bytes.Buffer)
 	ll.Print()
 	values := strings.Split(buff.String(), "\n")
 	final := []int{}

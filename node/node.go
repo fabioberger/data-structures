@@ -2,11 +2,12 @@ package node
 
 import (
 	"errors"
-	"log"
+	"fmt"
+	"io"
 	"os"
 )
 
-var Logger *log.Logger = log.New(os.Stdout, "", 0)
+var Output io.Writer = os.Stdout
 
 // Node is a struct that models a singly-linkedlist
 type Node struct {
@@ -26,7 +27,7 @@ func NewNode(data int) *Node {
 func (n *Node) Print() {
 	for n != nil {
 		// fmt.Println(n)
-		Logger.Printf("%v", n.Data)
+		fmt.Fprintln(Output, n.Data)
 		n = n.Next
 	}
 }
