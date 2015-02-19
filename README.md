@@ -21,6 +21,14 @@ import "github.com/fabioberger/data-structures/queue"
 
 And off you go!
 
+# Running Tests
+
+To run the library tests, type the following command from the project's root directory:
+
+```
+go test ./... -v
+```
+
 # Example Usage
 
 ## Binary Search Trees
@@ -53,8 +61,7 @@ fmt.Println("Found: ", value)
 **Traverse the tree ("inOrder", "preOrder" & "postOrder"):**
 
 ```
-traversal := []int{}
-tree.Traverse("inOrder", &traversal)
+traversal := tree.Traverse("inOrder")
 fmt.Println(traversal) // [2 4 8 17]
 ```
 

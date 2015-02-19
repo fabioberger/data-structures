@@ -4,8 +4,7 @@ import "testing"
 
 func TestInOrderTraversal(t *testing.T) {
 	tree := initTree()
-	got := []int{}
-	tree.Traverse("inOrder", &got)
+	got := tree.Traverse("inOrder")
 	expected := []int{1, 2, 3, 4, 5, 6, 7, 8, 17}
 	for i, val := range got {
 		if val != expected[i] {
@@ -16,8 +15,7 @@ func TestInOrderTraversal(t *testing.T) {
 
 func TestPostOrderTraversal(t *testing.T) {
 	tree := initTree()
-	got := []int{}
-	tree.Traverse("postOrder", &got)
+	got := tree.Traverse("postOrder")
 	expected := []int{1, 3, 2, 5, 7, 6, 4, 17, 8}
 	for i, val := range got {
 		if val != expected[i] {
@@ -28,8 +26,7 @@ func TestPostOrderTraversal(t *testing.T) {
 
 func TestPreOrderTraversal(t *testing.T) {
 	tree := initTree()
-	got := []int{}
-	tree.Traverse("preOrder", &got)
+	got := tree.Traverse("preOrder")
 	expected := []int{8, 4, 2, 1, 3, 6, 5, 7, 17}
 	for i, val := range got {
 		if val != expected[i] {

@@ -106,20 +106,26 @@ func (t *Tree) Maximum() (*Tree, error) {
 // Traverse will visit each node in a BST, printing each one as it goes
 // This method requires specifying the kind of traversal to perform:
 // either inOrder, preOrder or postOrder traversal
-func (t *Tree) Traverse(kind string, collector *[]int) {
+func (t *Tree) Traverse(kind string) []int {
+	collector := []int{}
+	t.TraverseRecursively(kind, &collector)
+	return collector
+}
+
+func (t *Tree) TraverseRecursively(kind string, collector *[]int) {
 	if t != nil {
 		switch {
 		case kind == "inOrder":
-			t.Left.Traverse("inOrder", collector)
+			t.Left.TraverseRecursively("inOrder", collector)
 			(*collector) = append((*collector), t.Item)
-			t.Right.Traverse("inOrder", collector)
+			t.Right.TraverseRecursively("inOrder", collector)
 		case kind == "preOrder":
 			(*collector) = append((*collector), t.Item)
-			t.Left.Traverse("preOrder", collector)
-			t.Right.Traverse("preOrder", collector)
+			t.Left.TraverseRecursively("preOrder", collector)
+			t.Right.TraverseRecursively("preOrder", collector)
 		case kind == "postOrder":
-			t.Left.Traverse("postOrder", collector)
-			t.Right.Traverse("postOrder", collector)
+			t.Left.TraverseRecursively("postOrder", collector)
+			t.Right.TraverseRecursively("postOrder", collector)
 			(*collector) = append((*collector), t.Item)
 		}
 	}
